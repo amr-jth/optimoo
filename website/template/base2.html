@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Input Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            display: grid;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            font-size: 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Data Input Form</h1>
+        <form id="dataForm">
+            <div class="form-group">
+                <label for="name">Full Name:</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email Address:</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone Number:</label>
+                <input type="tel" id="phone" name="phone">
+            </div>
+            
+            <div class="form-group">
+                <label for="dob">Date of Birth:</label>
+                <input type="date" id="dob" name="dob">
+            </div>
+            
+            <div class="form-group">
+                <label for="department">Department:</label>
+                <select id="department" name="department">
+                    <option value="">Select a department</option>
+                    <option value="hr">Human Resources</option>
+                    <option value="it">Information Technology</option>
+                    <option value="finance">Finance</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="operations">Operations</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Employment Status:</label>
+                <div>
+                    <input type="radio" id="fullTime" name="status" value="fullTime">
+                    <label for="fullTime">Full-time</label>
+                </div>
+                <div>
+                    <input type="radio" id="partTime" name="status" value="partTime">
+                    <label for="partTime">Part-time</label>
+                </div>
+                <div>
+                    <input type="radio" id="contract" name="status" value="contract">
+                    <label for="contract">Contract</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="skills">Skills (select all that apply):</label>
+                <div>
+                    <input type="checkbox" id="skill1" name="skills" value="programming">
+                    <label for="skill1">Programming</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="skill2" name="skills" value="design">
+                    <label for="skill2">Design</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="skill3" name="skills" value="communication">
+                    <label for="skill3">Communication</label>
+                </div>
+                <div>
+                    <input type="checkbox" id="skill4" name="skills" value="leadership">
+                    <label for="skill4">Leadership</label>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="comments">Additional Comments:</label>
+                <textarea id="comments" name="comments" rows="4"></textarea>
+            </div>
+            
+            <div class="form-buttons">
+                <button type="reset">Reset Form</button>
+                <button type="submit">Submit Data</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('dataForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            
+            // Collect form data
+            const formData = new FormData(this);
+            const formValues = {};
+            
+            for (const [key, value] of formData.entries()) {
+                formValues[key] = value;
+            }
+            
+            // Display submitted data (in a real application, you would send this to a server)
+            console.log('Form data submitted:', formValues);
+            alert('Form submitted successfully!\n\nCheck the console to see the data.');
+            
+            // You could add AJAX code here to send data to a server
+        });
+    </script>
+</body>
+</html>
