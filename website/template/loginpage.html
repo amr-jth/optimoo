@@ -251,10 +251,17 @@
   <div class="modal-content">
       <span class="close">&times;</span>
       <h2>Are you sure you want to logout?</h2>
-      <button class="btn logout-btn" id="confirmLogout">Yes, Logout</button>
+      <button class="btn logout-btn" id="confirmLogout" onclick="onlogout()">Yes, Logout</button>
       <button class="btn cancel-btn" id="cancelLogout">Cancel</button>
   </div>
 </div>
+
+<script>
+  function onlogout()
+  {
+    window.location.href="/"
+  }
+</script>
 
 <style>
   /* Modal Background */

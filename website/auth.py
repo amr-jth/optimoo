@@ -3,6 +3,7 @@ from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from .database import db
 from .models import User,Cattle
+from datetime import datetime
 
 auth = Blueprint('auth', __name__)
 
@@ -106,6 +107,46 @@ def delete_user():
     except Exception as e:
         return jsonify({"success": False, "message": "Server error!", "error": str(e)}), 500
     
+
+
+
+
+
+
+
+
+@auth.route('/deletecattle')
+def cat():
+    return render_template('deletecattle.html')
+
+@auth.route('/deletecattle', methods=['DELETE'])
+def delete_cattle():
+    try:
+        data = request.get_json()
+        cattleid = data.get('cattleid')
+
+        if not cattleid:
+            return jsonify({"success": False, "message": "cattleid is required!"}), 400
+
+        
+        cattle_to_delete = Cattle.query.filter_by(cattle_id=cattleid).first()
+
+        if not cattle_to_delete:
+            return jsonify({"success": False, "message": "Cattle not found!"}), 404
+
+        db.session.delete(cattle_to_delete)
+        db.session.commit()
+
+        return jsonify({"success": True, "message": f"Cattle {cattleid} deleted successfully!"}), 200
+
+    except Exception as e:
+        return jsonify({"success": False, "message": "Server error!", "error": str(e)}), 500
+
+
+
+
+
+    
 @auth.route('/cattleupdate')
 def cattle_update():
     return render_template('cattle_update.html')
@@ -117,34 +158,81 @@ def cattle_data():
 
 
 
+# @auth.route('/cattleupdate', methods=['POST'])
+# def submit_cattle():
+#     data = request.get_json()  # Get JSON data from frontend
+
+#     if not data:
+#         return jsonify({"success": False, "message": "No data received!"}), 400
+    
+#     new_cattle = Cattle(
+#         cattle_id=data['cattleId'],
+#         name=data.get('name', None),
+#         photo=data.get('photo', None),
+#         breed=data['breed'],
+#         gender=data['gender'],
+#         life_stage=data['lifeStage'],
+#         age=data['age'],
+#         birth_date=data.get('birthDate', None),
+#         weight=data['weight'],
+#         height=data.get('height', None),
+#         feed_intake=data['feedIntake'],
+#         feed_type=data.get('feedType', None),
+#         health=data.get('health', None),
+#         notes=data.get('notes', None)
+#     )
+
+#     db.session.add(new_cattle)
+#     db.session.commit()
+
+#     return jsonify({'message': 'Cattle details saved successfully!'}), 201
 @auth.route('/cattleupdate', methods=['POST'])
 def submit_cattle():
-    data = request.get_json()  # Get JSON data from frontend
+    data = request.get_json()
 
     if not data:
         return jsonify({"success": False, "message": "No data received!"}), 400
-    
-    new_cattle = Cattle(
-        cattle_id=data['cattleId'],
-        name=data.get('name', None),
-        #photo=data.get('photo', None),
-        breed=data['breed'],
-        #gender=data['gender'],
-        life_stage=data['lifeStage'],
-        age=data['age'],
-        #birth_date=data.get('birthDate', None),
-        weight=data['weight'],
-        #height=data.get('height', None),
-        feed_intake=data['feedIntake'],
-        feed_type=data.get('feedType', None),
-        health=data.get('health', None),
-        #notes=data.get('notes', None)
-    )
 
-    db.session.add(new_cattle)
-    db.session.commit()
+    print("Received Data:", data)  # Debugging
 
-    return jsonify({'message': 'Cattle details saved successfully!'}), 201
+    # # Check if required fields exist
+    # required_fields = ["cattleId", "breed", "gender", "lifeStage", "age", "weight", "feedIntake"]
+    # for field in required_fields:
+    #     if field not in data or data[field] == "":
+    #         return jsonify({"success": False, "message": f"Missing field: {field}"}), 400
+
+    try:
+        # Convert birth_date from string to Python date object
+        # birth_date = None
+        # if data.get('birthDate'):
+        #     birth_date = datetime.strptime(data['birthDate'], "%Y-%m-%d").date()
+
+        new_cattle = Cattle(
+            cattle_id=data['cattleId'],
+            name=data.get('name', None),
+            #photo=data.get('photo', None),
+            breed=data['breed'],
+            #gender=data['gender'],
+            life_stage=data['lifeStage'],
+            age=int(data['age']),
+            #birth_date=birth_date,
+            weight=float(data['weight']),
+            #height=float(data.get('height', 0)),  # Handle None case
+            feed_intake=float(data['feedIntake']),
+            feed_type=data.get('feedType', None),
+            health=data.get('health', None),
+            #notes=data.get('notes', None)
+        )
+
+        db.session.add(new_cattle)
+        db.session.commit()
+        print("Cattle successfully added to DB!")  # Debugging
+        return jsonify({'message': 'Cattle details saved successfully!'}), 201
+
+    except Exception as e:
+        db.session.rollback()
+        print("Error:", str(e))  # Debugging
+        return jsonify({"success": False, "message": f"Error: {str(e)}"}), 500
 
 
 
@@ -156,6 +244,5 @@ def get_cattle():
         'cattleId': c.cattle_id,
         'name': c.name,
         'breed': c.breed,
-        'gender': c.gender,
         'weight': c.weight
     } for c in cattle_list])

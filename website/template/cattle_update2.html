@@ -8,6 +8,7 @@
 
 
 
+
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -165,7 +166,7 @@
             cursor: pointer;
         }
         .close:hover {
-            color: #353286;
+            color: #333;
         }
         .modal-title {
             margin-top: 0;
@@ -221,6 +222,8 @@
 
 
 
+
+
     <script>
         async function submitCattle(event) {
             event.preventDefault();
@@ -228,18 +231,18 @@
             const cattleData = {
                 cattleId: document.getElementById("cattleId").value,
                 name: document.getElementById("name").value,
-                //photo: document.getElementById("photo").value,
+                photo: document.getElementById("photo").value,
                 breed: document.getElementById("breed").value,
-                //gender: document.getElementById("gender").value,
+                gender: document.getElementById("gender").value,
                 lifeStage: document.getElementById("lifeStage").value,
                 age: document.getElementById("age").value,
-                //birthDate: document.getElementById("birthDate").value,
+                birthDate: document.getElementById("birthDate").value,
                 weight: document.getElementById("weight").value,
-                //height: document.getElementById("height").value,
+                height: document.getElementById("height").value,
                 feedIntake: document.getElementById("feedIntake").value,
                 feedType: document.getElementById("feedType").value,
                 health: document.getElementById("health").value,
-                //notes: document.getElementById("notes").value
+                notes: document.getElementById("notes").value
             };
 
             const response = await fetch("http://127.0.0.1:5000/cattleupdate", {
@@ -255,28 +258,44 @@
         }
 
 
-    document.addEventListener("DOMContentLoaded", function () {
-    const cancelButton = document.getElementById("cancel");
-    
-    if (cancelButton) {
-        cancelButton.addEventListener("click", function (event) {
-            event.preventDefault();
-        
-            document.querySelectorAll("input, textarea").forEach(field => field.value = "");
-            
-            // Clear all checkboxes and radio buttons
-            document.querySelectorAll("input[type='checkbox'], input[type='radio']").forEach(box => box.checked = false);
-            
-            // Clear all dropdown selections
-            document.querySelectorAll("select").forEach(select => select.selectedIndex = 0);
-
+        // Display the "Other Breed" field only when "Other" is selected
+        document.getElementById('breed').addEventListener('change', function() {
+            const otherBreedField = document.getElementById('otherBreed');
+            otherBreedField.style.display = this.value === 'other' ? 'block' : 'none';
+            otherBreedField.required = this.value === 'other';
         });
-    }
-});
 
+        // Auto-calculate age when birth date is entered
+        document.getElementById('birthDate').addEventListener('change', function() {
+            const birthDate = new Date(this.value);
+            const today = new Date();
+            const ageInMonths = Math.floor((today - birthDate) / (1000 * 60 * 60 * 24 * 30.4375));
+            
+            if (!isNaN(ageInMonths) && ageInMonths >= 0) {
+                document.getElementById('age').value = ageInMonths;
+            }
+        });
+
+        // Photo preview functionality
+        document.getElementById('photo').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const photoPreview = document.getElementById('photo-preview');
+                    photoPreview.style.backgroundImage = `url(${event.target.result})`;
+                    document.getElementById('photo-placeholder').style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        cancel(event)
+        {
+            event.preventDefault();
+        }
 
     </script>
-
 </head>
 <body>
     <body>
@@ -313,8 +332,7 @@
                         </div>
                     </div>
                     
-                    
-                    <!-- Photo Upload Section
+                    <!-- Photo Upload Section -->
                      <div class="form-group">
                         <label for="photo">Cattle Photo</label>
                         <div class="photo-preview" id="photo-preview">
@@ -327,8 +345,7 @@
                             <input type="file" id="photo" class="file-input" accept="image/*">
                         </div>
                         <small>Accepted formats: JPG, PNG, GIF (Max size: 5MB)</small>
-                    </div>  -->
-
+                    </div> 
                     
                     <div class="form-row">
                         <div class="form-column">
@@ -358,14 +375,14 @@
                     
                     <div class="form-row">
                         <div class="form-column">
-                            <!-- <div class="form-group">
+                            <div class="form-group">
                                 <label for="gender" class="required">Gender</label>
                                 <select id="gender" required>
                                     <option value="">Select gender</option>
                                     <option value="male">Male</option>
                                     <option value="female">Female</option>
                                 </select>
-                            </div> -->
+                            </div>
                         </div>
                         <div class="form-column">
                             <div class="form-group">
@@ -392,10 +409,10 @@
                             </div>
                         </div>
                             <div class="form-column">
-                            <!-- <div class="form-group">
+                            <div class="form-group">
                                 <label for="birthDate">Birth Date</label>
                                 <input type="date" id="birthDate">
-                            </div> -->
+                            </div>
                         </div> 
                     </div>
                     
@@ -407,10 +424,10 @@
                             </div>
                         </div>
                         <div class="form-column">
-                            <!-- <div class="form-group">
+                            <div class="form-group">
                                 <label for="heightAtWithers">Height at Withers (cm)</label>
                                 <input type="number" id="heightAtWithers" min="0" max="200" step="0.1" placeholder="Enter height in cm">
-                            </div> -->
+                            </div>
                         </div>
                     </div>
                     
@@ -443,13 +460,13 @@
                     </div>
                     
                     <div class="form-group">
-                        <!-- <label for="notes">Additional Notes</label>
-                        <textarea id="notes" rows="3" placeholder="Enter any additional information about the cattle"></textarea> -->
+                        <label for="notes">Additional Notes</label>
+                        <textarea id="notes" rows="3" placeholder="Enter any additional information about the cattle"></textarea>
                     </div>
                     
                     <div class="btn-container">
                         <button type="button" class="cancel-btn" id="cancel">Cancel</button>
-                        <button type="submit" id="submit" onclick="submitCattle(event)">Update Details</button>
+                        <button type="submit" id="submit">Update Details</button>
                     </div>
                 </form>
             </div>
