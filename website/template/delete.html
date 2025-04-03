@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Delete User</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 50px;
+            text-align: center;
+        }
+        input, button {
+            padding: 10px;
+            margin: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Delete User</h2>
+    <p>Enter an email to delete the user from the database.</p>
+
+    <form id="delete-form">
+        <input type="email" id="email" placeholder="Enter Email" required>
+        <button type="submit">Delete User</button>
+    </form>
+
+    <p id="message"></p>
+
+    <script>
+        document.getElementById("delete-form").addEventListener("submit", function(event) {
+            event.preventDefault(); // Prevent form submission
+            
+            let email = document.getElementById("email").value;
+
+            fetch('/delete', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email: email })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("message").textContent = data.message;
+            })
+            .catch(error => console.error("Error:", error));
+        });
+    </script>
+
+</body>
+</html>

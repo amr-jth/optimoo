@@ -401,22 +401,64 @@
             <form id="signin-form">
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 500;">Username or Email</label>
-                    <input type="text" style="width: 100%; padding: 12px 15px; border: 1px solid var(--medium-gray); border-radius: 5px; font-size: 16px;" required>
+                    <input type="text" id="signin-username" style="width: 100%; padding: 12px 15px; border: 1px solid var(--medium-gray); border-radius: 5px; font-size: 16px;" required>
                 </div>
                 <div style="margin-bottom: 20px;">
                     <label style="display: block; margin-bottom: 8px; font-weight: 500;">Password</label>
-                    <input type="password" style="width: 100%; padding: 12px 15px; border: 1px solid var(--medium-gray); border-radius: 5px; font-size: 16px;" required>
+                    <input type="password" id="signin-password" style="width: 100%; padding: 12px 15px; border: 1px solid var(--medium-gray); border-radius: 5px; font-size: 16px;" required>
                 </div>
                 <button type="submit" style="width: 100%; background-color: var(--primary-color); color: white; border: none; border-radius: 5px; padding: 12px; font-size: 16px; font-weight: 500; cursor: pointer;">Sign In</button>
+                <p id="login-message" style="text-align: center; color: red; margin-top: 10px;"></p>
                 <div style="text-align: center; margin-top: 15px;">
                     <a href="#" style="color: var(--primary-color); text-decoration: none;">Forgot password?</a>
                 </div>
                 <div style="text-align: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--medium-gray);">
-                    Don't have an account? <a href="#" style="color: var(--primary-color); text-decoration: none;">Sign Up</a>
+                    Don't have an account? <a href="/signup" style="color: var(--primary-color); text-decoration: none;">Sign Up</a>
                 </div>
             </form>
         </div>
     </div>
+    
+    <script>
+    document.getElementById('signin-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevent default form submission
+    
+        const emailOrUsername = document.getElementById('signin-username').value;
+        const password = document.getElementById('signin-password').value;
+        const message = document.getElementById('login-message');
+    
+        const response = await fetch('/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email: emailOrUsername, password: password }) // Adjust key based on backend logic
+        });
+    
+        const result = await response.json();
+        message.textContent = result.message;
+    
+        if (result.success) {
+            message.style.color = "green";
+            setTimeout(() => {
+                window.location.href = "/login"; // Redirect to dashboard on success
+            }, 1000);
+        }
+    });
+    </script>
+    
+
+
+
+
+
+
+
+
+    <script>
+        function gotologin() {
+            window.location.href = "/loginpage";
+        }
+    </script>
+
     
     <!-- Footer -->
     <footer>
@@ -505,7 +547,7 @@
             closeSignInModal();
             
             // Show notification
-            showNotification('Sign In Successful', 'Welcome back! You have been logged in successfully.', 'success');
+            //showNotification('Sign In Successful', 'Welcome back! You have been logged in successfully.', 'success');
         });
         
         // Notification system
