@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify,session
 from werkzeug.security import generate_password_hash
 from werkzeug.security import check_password_hash
 from .database import db
 from .models import User,Cattle
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 from datetime import datetime
 
 auth = Blueprint('auth', __name__)
@@ -27,12 +28,16 @@ def signup_api():
         username = data.get('username')
         email = data.get('email')
         password = data.get('password')
+        contact=data.get('contact')
+        location=data.get('location')
+        size=data.get('size')
+
 
         if not username or not email or not password:
             return jsonify({"success": False, "message": "Missing fields!"}), 400
 
         # Save to database
-        new_user = User(username=username, email=email, password=password)
+        new_user = User(username=username, email=email, password=password, contact=contact, location=location, size=size)
         db.session.add(new_user)
         db.session.commit()
 
@@ -49,7 +54,7 @@ def get_users():
     if not users:
         return jsonify({"message": "No users found!"}), 404
 
-    user_list = [{"id": user.id, "username": user.username, "email": user.email ,"password": user.password} for user in users]
+    user_list = [{"id": user.id, "username": user.username, "email": user.email ,"password": user.password, "contact": user.contact} for user in users]
     return jsonify(user_list), 200
 
 
@@ -60,12 +65,14 @@ def login_page():
     return render_template('login.html')
 
 # Handle login authentication
-@auth.route('/login', methods=['POST'])
+@auth.route('/logging', methods=['POST'])
 def login_api():
     try:
         data = request.get_json()
         email_or_username = data.get('email')
         password = data.get('password')
+
+        
 
         # Check if user exists (by email or username)
         user = User.query.filter((User.email == email_or_username) | (User.username == email_or_username)).first()
@@ -73,7 +80,8 @@ def login_api():
         #  Compare passwords directly (Plain Text)
         if not user or user.password != password:
             return jsonify({"success": False, "message": "Invalid credentials!"}), 401
-
+        session["user_email"] = user.email
+        print(session["user_email"])
         return jsonify({"success": True, "message": "Login successful!"})
 
     except Exception as e:
@@ -157,35 +165,6 @@ def cattle_data():
     return render_template('cattkle_data.html')
 
 
-
-# @auth.route('/cattleupdate', methods=['POST'])
-# def submit_cattle():
-#     data = request.get_json()  # Get JSON data from frontend
-
-#     if not data:
-#         return jsonify({"success": False, "message": "No data received!"}), 400
-    
-#     new_cattle = Cattle(
-#         cattle_id=data['cattleId'],
-#         name=data.get('name', None),
-#         photo=data.get('photo', None),
-#         breed=data['breed'],
-#         gender=data['gender'],
-#         life_stage=data['lifeStage'],
-#         age=data['age'],
-#         birth_date=data.get('birthDate', None),
-#         weight=data['weight'],
-#         height=data.get('height', None),
-#         feed_intake=data['feedIntake'],
-#         feed_type=data.get('feedType', None),
-#         health=data.get('health', None),
-#         notes=data.get('notes', None)
-#     )
-
-#     db.session.add(new_cattle)
-#     db.session.commit()
-
-#     return jsonify({'message': 'Cattle details saved successfully!'}), 201
 @auth.route('/cattleupdate', methods=['POST'])
 def submit_cattle():
     data = request.get_json()
@@ -246,3 +225,24 @@ def get_cattle():
         'breed': c.breed,
         'weight': c.weight
     } for c in cattle_list])
+
+
+@auth.route('/get_user', methods=['GET'])
+def get_user():
+    email=session.get("user_email")
+    print(email)
+
+    user = User.query.filter_by(email=email).first()
+
+    if user:
+            print(user.email,"",user.id)
+            return jsonify({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "contact": user.contact,
+            "location": user.location,
+            "size": user.size
+            })
+    else:
+        return jsonify({"error": "User not found"}), 404

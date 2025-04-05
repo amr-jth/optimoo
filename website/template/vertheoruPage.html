@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Single Page Magic</title>
+  <style>
+    body {
+      font-family: Georgia, serif;
+      padding: 2rem;
+      background: #f4f1ee;
+    }
+    .page {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+    button {
+      margin-top: 1rem;
+      padding: 0.5rem 1rem;
+      border: none;
+      background-color: #4a5568;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Home Page -->
+  <div id="homePage" class="page active">
+    <h1>Welcome Home!</h1>
+    <p>This is the home page. It's warm and cozy here.</p>
+    <button onclick="showPage('aboutPage')">Go to About</button>
+  </div>
+
+  <!-- About Page -->
+  <div id="aboutPage" class="page">
+    <h1>About Us</h1>
+    <p>We are dreamers, poets, and coders wandering through digital meadows.</p>
+    <button onclick="showPage('homePage')">Back to Home</button>
+  </div>
+
+  <script>
+    function showPage(pageId) {
+      const pages = document.querySelectorAll('.page');
+      pages.forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageId).classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

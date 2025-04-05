@@ -351,20 +351,86 @@
   confirmLogout.onclick = function () {
       window.location.href = "/"; // Change this to your actual logout route
   };
+
+
+
+
+
+  async function fetchUserData(userId) {
+            try {
+                const response = await fetch(`/user/${userId}`);
+                const data = await response.json();
+
+                if (response.ok) {
+                    document.getElementById("userId").innerText = data.id;
+                    document.getElementById("username").innerText = data.username;
+                    document.getElementById("email").innerText = data.email;
+                } else {
+                    document.getElementById("userDetails").innerHTML = `<p style="color:red;">${data.error}</p>`;
+                }
+            } catch (error) {
+                console.error("Error fetching user data:", error);
+                document.getElementById("userDetails").innerHTML = `<p style="color:red;">Failed to load user data.</p>`;
+            }
+        }
+
+        // Call the function with the desired user ID
+        window.onload = () => {
+            const userId = 1;  // Change this dynamically if needed
+            fetchUserData(userId);
+        };
+
+
 </script>
 
 
 
 
-  <!-- Main Content Area -->
-  <div class="main-content">
-    <div class="header">
-      <h1>Farmer Dashboard</h1>
-      <div class="user-profile">
-        <div class="user-avatar">BS</div>
-        <div class="user-name">Balwir Singh</div>
-      </div>
+
+    <script>
+      async function fetchUserByEmail() {
+          try {
+              const response = await fetch("/get_user", { method: "GET", credentials: "include" });
+
+              const data = await response.json();
+              console.log("Response Data:", data);
+
+              if (response.ok) {
+                document.querySelectorAll('.username').forEach(el => {
+                    el.innerText = `${data.username}`;
+                  });
+                document.querySelectorAll('.contact').forEach(el=>{el.innerText=`${data.contact}`})
+                document.querySelectorAll('.size').forEach(el=>{el.innerText=`${data.size}`})
+                document.querySelectorAll('.location').forEach(el=>{el.innerText=`${data.location}`})
+                document.querySelectorAll('.id').forEach(el=>{el.innerText=`${data.id}`})
+                document.querySelectorAll('.email').forEach(el=>{el.innerText=`${data.email}`})
+              } else {
+                  document.getElementById("userDetails").innerHTML = `<p style="color:red;">${data.error}</p>`;
+              }
+          } catch (error) {
+              console.error("Error fetching user data:", error);
+              document.getElementById("userDetails").innerHTML = `<p style="color:red;">Failed to load user data.</p>`;
+          }
+      }
+
+      window.onload = fetchUserByEmail;
+  </script>
+
+
+ <!-- Main Content Area -->
+ <div class="main-content">
+  <div class="header">
+    <h1>Farmer Dashboard</h1>
+    <div class="user-profile">
+      <div class="user-avatar" ><p class="id"></p></div>
+      <div class="user-name"><p class="username"></p></div>
     </div>
+  </div>
+
+
+
+
+
 
     <!-- Combined Farmer and Farm Details -->
     <div class="dashboard-summary">
@@ -373,11 +439,11 @@
         <h3>Farmer Information</h3>
         <div class="detail-item">
           <label>Name</label>
-          <span>Balwi Singh</span>
+          <p class="username"></p>
         </div>
         <div class="detail-item">
           <label>Farmer ID</label>
-          <span>FARM12345</span>
+          <p>Farmer:<span class="id"></span></p>
         </div>
         <div class="detail-item">
           <label>Contact</label>
@@ -385,7 +451,7 @@
         </div>
         <div class="detail-item">
           <label>Email</label>
-          <span>balwirsingh123@example.com</span>
+          <span id="email"></span>
         </div>
       </div>
       

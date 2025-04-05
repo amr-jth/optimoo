@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from .database import db
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity, JWTManager
 from flask_migrate import Migrate
 
 def create_app():
@@ -8,6 +9,8 @@ def create_app():
     app.config['SECRET_KEY']='na'
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config["JWT_SECRET_KEY"] = "na"  # Set a strong secret key!
+    jwt = JWTManager(app)
 
     db.init_app(app)
     migrate = Migrate(app, db)
