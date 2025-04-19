@@ -1,378 +1,116 @@
-<!-- #sjdffjidkakdkaopdsooasddpa, -->
-
-
-
-
-
-
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cattle Information Cards</title>
+    <title>My Cattle</title>
     <style>
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f5f5f5;
-            margin: 0;
+            font-family: 'Georgia', serif;
+            background-color: #f3f1e7;
             padding: 20px;
         }
-        
-        .header {
+        h1 {
             text-align: center;
-            margin-bottom: 30px;
+            color: #3367d6;
         }
-        
-        .header h1 {
-            color: #2c3e50;
-            margin-bottom: 10px;
+        table {
+            width: 80%;
+            margin: auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        
-        .header p {
-            color: #7f8c8d;
-            font-size: 18px;
+        th, td {
+            padding: 12px 15px;
+            text-align: center;
+            border-bottom: 1px solid #ccc;
         }
-        
-        .cards-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 20px;
-            max-width: 1200px;
-            margin: 0 auto;
+        th {
+            background-color: #376ea9;
+            color: #ffffff;
         }
-        
-        .card {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-            width: 300px;
-            transition: transform 0.3s ease;
+        tr:hover {
+            background-color: #f2f2f2;
         }
-        
-        .card:hover {
-            transform: translateY(-5px);
+        .no-data {
+            text-align: center;
+            color: #a00;
+            margin-top: 30px;
         }
-        
-        .card-header {
+        .btn
+        {
+            background-color: #376ea9;
             color: white;
-            padding: 15px;
-            text-align: center;
+            padding: 8px 16px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
         }
-        
-        .card-body {
-            padding: 20px;
+        .btn:hover
+        {
+            background-color: #376ea9;
         }
-        
-        .detail {
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-        }
-        
-        .detail-label {
-            font-weight: bold;
-            width: 80px;
-            color: #7f8c8d;
-        }
-        
-        .detail-value {
-            flex-grow: 1;
-            text-align: right;
-            font-size: 18px;
-        }
-        
-        .card-footer {
-            background-color: #f9f9f9;
-            padding: 15px;
-            text-align: center;
-            border-top: 1px solid #eee;
-        }
-        
-        .badge {
-            display: inline-block;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: bold;
-            color: white;
-            margin-right: 5px;
-        }
-        
-        /* Different colors for breed categories */
-        .dairy { background-color: #3498db; }
-        .beef { background-color: #e74c3c; }
-        .dual { background-color: #9b59b6; }
-        .heritage { background-color: #f39c12; }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Cattle Information Dashboard</h1>
-        <p>View detailed information about your cattle herd</p>
-    </div>
 
-    <div class="navbar">
-        <h2>Cattle Management System</h2>
-        <div class="navbar-buttons">
-            <button class="nav-btn back-btn" id="back-button">← Back to List</button>
-            <button class="nav-btn" id="dashboard-button">Dashboard</button>
-        </div>
-    </div>
+    <h1>Registered Cattles</h1>
+    <table id="cattleTable" style="display:none;">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Breed</th>
+                <th>Age</th>
+                <th>Weight</th>
+                <th>Feed Intake</th>
+                <th>Health</th>
+                
+            </tr>
+        </thead>
+        <tbody id="cattleBody">
 
-    <div class="cards-container">
-        <!-- Card 1 -->
-        <div class="card" id="card-container">
-            <div class="card-header" style="background-color: #3498db;">
-                <h2>Bessie</h2>
-            </div>
-            <div class="card-body">
-                <div class="detail">
-                    <span class="detail-label">Breed:</span>
-                    <span class="detail-value">Holstein</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Age:</span>
-                    <span class="detail-value">4 years</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Weight:</span>
-                    <span class="detail-value">1,450 lbs</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Gender:</span>
-                    <span class="detail-value">Female</span>
-                </div>
-            </div>
-            <div class="card-footer">
-                <span class="badge dairy">Dairy</span>
-                <span class="badge" style="background-color: #2ecc71;">High Production</span>
-            </div>
-        </div>
+        </tbody>
+    </table>
 
+    <a href="/cattleupdate"><button class="btn">click to add more data</button></a>
+    <a href="/login"><button class="btn">click to go back</button></a>
+    <div id="noDataMessage" class="no-data"></div>
 
+    <script>
+        // Fetch data from your Flask backend
+        fetch('/get_cattle')
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success' && data.cattle.length > 0) {
+                    document.getElementById("cattleTable").style.display = "table";
+                    //document.getElementById("email").innerText=cow.email;
+                    const tbody = document.getElementById("cattleBody");
+                    data.cattle.forEach(cow => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${cow.id}</td>
+                            <td>${cow.name}</td>
+                            <td>${cow.breed}</td>
+                            <td>${cow.age}</td>
+                            <td>${cow.weight}</td>
+                            <td>${cow.feed_intake}</td>
+                            <td>${cow.health}</td>
+                            <td><a href="/feed?id=${cow.id}"><button class="btn">Feed Detail</button></a></td>
+                            <td><a href="/pform?id=${cow.id}"><button class="btn">Market Analysis</button></a></td>
+                        `;
+                        tbody.appendChild(row);
+                    });
+                } else {
+                    document.getElementById("noDataMessage").innerText = "No cattle data found for this user.";
+                }
+            })
+            .catch(error => {
+                document.getElementById("noDataMessage").innerText = "Something went wrong fetching the data.";
+                console.error("Error fetching cattle:", error);
+            });
+    </script>
 
-
-
-
-
-
-
-
-
-<script>
-
-const cows = [
-    { name: "Bessie", breed: "Holstein", age: "4 years", weight: "1,450 lbs", gender: "Female", type: "Dairy", production: "High Production" }
-];
-
-function createCard(cow) {
-    return `
-        <div class="card">
-            <div class="card-header" style="background-color: #3498db;">
-                <h2>${cow.name}</h2>
-            </div>
-            <div class="card-body">
-                <div class="detail"><span class="detail-label">Breed:</span> <span class="detail-value">${cow.breed}</span></div>
-                <div class="detail"><span class="detail-label">Age:</span> <span class="detail-value">${cow.age}</span></div>
-                <div class="detail"><span class="detail-label">Weight:</span> <span class="detail-value">${cow.weight}</span></div>
-                <div class="detail"><span class="detail-label">Gender:</span> <span class="detail-value">${cow.gender}</span></div>
-            </div>
-            <div class="card-footer">
-                <span class="badge dairy">${cow.type}</span>
-                <span class="badge" style="background-color: #2ecc71;">${cow.production}</span>
-            </div>
-        </div>
-    `;
-}
-
-function renderCards() {
-    const container = document.getElementById("card-container");
-    container.innerHTML = cows.map(createCard).join(""); // Update the card container
-}
-
-// Function to add a new cow (you can modify this to take user input)
-function addNewCow() {
-    const newCow = { 
-        name: "Daisy", 
-        breed: "Jersey", 
-        age: "3 years", 
-        weight: "1,200 lbs", 
-        gender: "Female", 
-        type: "Dairy", 
-        production: "Moderate Production" 
-    };
-    cows.push(newCow);
-    renderCards(); // Refresh the card display
-}
-
-// Initial rendering of cards
-renderCards();
-
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-        <!-- Card 2 -->
-        <div class="card">
-            <div class="card-header" style="background-color: #e74c3c;">
-                <h2>Big Red</h2>
-            </div>
-            <div class="card-body">
-                <div class="detail">
-                    <span class="detail-label">Breed:</span>
-                    <span class="detail-value">Angus</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Age:</span>
-                    <span class="detail-value">6 years</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Weight:</span>
-                    <span class="detail-value">2,100 lbs</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Gender:</span>
-                    <span class="detail-value">Male</span>
-                </div>
-            </div>
-            <div class="card-footer">
-                <span class="badge beef">Beef</span>
-                <span class="badge" style="background-color: #27ae60;">Champion</span>
-            </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="card">
-            <div class="card-header" style="background-color: #9b59b6;">
-                <h2>Daisy</h2>
-            </div>
-            <div class="card-body">
-                <div class="detail">
-                    <span class="detail-label">Breed:</span>
-                    <span class="detail-value">Jersey</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Age:</span>
-                    <span class="detail-value">3 years</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Weight:</span>
-                    <span class="detail-value">1,050 lbs</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Gender:</span>
-                    <span class="detail-value">Female</span>
-                </div>
-            </div>
-            <div class="card-footer">
-                <span class="badge dairy">Dairy</span>
-                <span class="badge" style="background-color: #f1c40f;">Premium Milk</span>
-            </div>
-        </div>
-
-        <!-- Card 4 -->
-        <div class="card">
-            <div class="card-header" style="background-color: #f39c12;">
-                <h2>Maverick</h2>
-            </div>
-            <div class="card-body">
-                <div class="detail">
-                    <span class="detail-label">Breed:</span>
-                    <span class="detail-value">Hereford</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Age:</span>
-                    <span class="detail-value">5 years</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Weight:</span>
-                    <span class="detail-value">1,980 lbs</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Gender:</span>
-                    <span class="detail-value">Male</span>
-                </div>
-            </div>
-            <div class="card-footer">
-                <span class="badge beef">Beef</span>
-                <span class="badge" style="background-color: #3498db;">Breeding Stock</span>
-            </div>
-        </div>
-
-        <!-- Card 5 -->
-        <div class="card">
-            <div class="card-header" style="background-color: #2ecc71;">
-                <h2>Buttercup</h2>
-            </div>
-            <div class="card-body">
-                <div class="detail">
-                    <span class="detail-label">Breed:</span>
-                    <span class="detail-value">Guernsey</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Age:</span>
-                    <span class="detail-value">2 years</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Weight:</span>
-                    <span class="detail-value">1,200 lbs</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Gender:</span>
-                    <span class="detail-value">Female</span>
-                </div>
-            </div>
-            <div class="card-footer">
-                <span class="badge dairy">Dairy</span>
-                <span class="badge" style="background-color: #95a5a6;">Young Stock</span>
-            </div>
-        </div>
-
-        <!-- Card 6 -->
-        <div class="card">
-            <div class="card-header" style="background-color: #d35400;">
-                <h2>Duke</h2>
-            </div>
-            <div class="card-body">
-                <div class="detail">
-                    <span class="detail-label">Breed:</span>
-                    <span class="detail-value">Texas Longhorn</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Age:</span>
-                    <span class="detail-value">8 years</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Weight:</span>
-                    <span class="detail-value">1,800 lbs</span>
-                </div>
-                <div class="detail">
-                    <span class="detail-label">Gender:</span>
-                    <span class="detail-value">Male</span>
-                </div>
-            </div>
-            <div class="card-footer">
-                <span class="badge heritage">Heritage</span>
-                <span class="badge" style="background-color: #7f8c8d;">Show Animal</span>
-            </div>
-        </div>
-        <button onclick="addNewCow()">Add New Cow</button>
-    </div>
 </body>
 </html>

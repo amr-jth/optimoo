@@ -6,6 +6,6 @@ app = create_app()  # Create the Flask app
 
 # Run the table drop inside the application context
 with app.app_context():
-    User.__table__.drop(db.engine)
+    Cattle.__table__.drop(db.engine)
 
     print("Cattle table dropped successfully!")

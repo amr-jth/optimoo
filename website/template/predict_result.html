@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Market Prediction Result</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-yellow-50 min-h-screen flex items-center justify-center px-4 py-8">
+
+  <div class="bg-white shadow-xl rounded-2xl p-8 max-w-xl w-full text-center">
+    <h1 class="text-2xl font-bold text-yellow-600 mb-4">📈 Market Readiness Result</h1>
+
+    <div class="text-left space-y-3 mb-6">
+      <p><strong>Weight:</strong> {{ weight }} kg</p>
+      <p><strong>Age:</strong> {{ age }} months</p>
+      <p><strong>Milk Yield:</strong> {{ milk_yield }} L/day</p>
+      <p><strong>Feed Type:</strong> {{ feed_type }}</p>
+    </div>
+
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded mb-6">
+      <p class="text-lg font-semibold">
+        🐄 <span class="text-gray-700">Market Ready:</span>
+        <span class="text-yellow-800">{{ market_ready }}</span>
+      </p>
+      <p class="text-md text-gray-700 mt-1">
+        ⏳ Estimated Days to Market Readiness: <strong>{{ days_to_ready }}</strong> days
+      </p>
+    </div>
+
+    <a href="/login"
+       class="inline-block bg-yellow-500 text-white px-5 py-2 rounded-lg hover:bg-yellow-600 transition">
+      ← Back to Dashboard
+    </a>
+  </div>
+
+</body>
+</html>

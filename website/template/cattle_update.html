@@ -230,7 +230,7 @@
                 name: document.getElementById("name").value,
                 //photo: document.getElementById("photo").value,
                 breed: document.getElementById("breed").value,
-                //gender: document.getElementById("gender").value,
+                type: document.getElementById("type").value,
                 lifeStage: document.getElementById("lifeStage").value,
                 age: document.getElementById("age").value,
                 //birthDate: document.getElementById("birthDate").value,
@@ -252,6 +252,15 @@
 
             const result = await response.json();
             alert(result.message);
+
+///////////////////////////////////////////////////////////////////////////////////////
+
+            window.location.href = "/cattle";
+        
+//////////////////////////////////////////////////////////////////////////////////////
+        
+        
+        
         }
 
 
@@ -285,7 +294,7 @@
             <h2>Cattle Management System</h2>
             <div class="navbar-buttons">
                 <button class="nav-btn back-btn" id="back-button">← Back to List</button>
-                <button class="nav-btn" id="dashboard-button">Dashboard</button>
+                <a href="/cattle"><button class="nav-btn" id="dashboard-button">Cattle data</button></a>
             </div>
         </div>
     
@@ -358,14 +367,15 @@
                     
                     <div class="form-row">
                         <div class="form-column">
-                            <!-- <div class="form-group">
-                                <label for="gender" class="required">Gender</label>
-                                <select id="gender" required>
-                                    <option value="">Select gender</option>
-                                    <option value="male">Male</option>
-                                    <option value="female">Female</option>
+                            <div class="form-group">
+                                <label for="type" class="required">Type</label>
+                                <select id="type" required>
+                                    <option value="">Select type</option>
+                                    <option value="cow">Cow</option>
+                                    <option value="buffalo">Buffalo</option>
+                                    <option value="goat">Goat</option>
                                 </select>
-                            </div> -->
+                            </div>
                         </div>
                         <div class="form-column">
                             <div class="form-group">
