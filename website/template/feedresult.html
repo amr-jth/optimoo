@@ -5,22 +5,44 @@
   <title>Feed Optimization Result</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-green-50 min-h-screen flex items-center justify-center px-4 py-8">
+<body class="bg-blue-50 min-h-screen flex items-center justify-center px-4 py-8">
 
   <div class="bg-white rounded-2xl shadow-xl p-8 max-w-xl w-full text-center">
-    <h1 class="text-2xl font-bold text-green-700 mb-4">✅ Feed Optimization Result</h1>
+    <h1 class="text-2xl font-bold text-blue-700 mb-4">✅ Feed Optimization Result</h1>
 
     <div class="text-left mb-6 space-y-2">
       <p><strong>Cow Type:</strong> {{ cow_type }}</p>
       <p><strong>Weight:</strong> {{ weight }} kg</p>
       <p><strong>Milk Yield:</strong> {{ milk_yield }} L/day</p>
-      <p><strong>Recommended Feed Intake:</strong> {{ feed_intake }} kg/day</p>
-      <p><strong>Selected Feed:</strong> {{ feed_type }}</p>
-      <p><strong>Feed Cost per kg:</strong> ₹{{ cost_per_kg }}</p>
-      <p class="text-lg font-semibold"><strong>Total Daily Cost:</strong> ₹{{ total_cost }}</p>
+      <p><strong>Lactation Stage:</strong> {{ lactation_stage }}</p>
+      <p><strong>Age:</strong> {{ age }} months</p>
+      <p><strong>Total Feed Required:</strong> {{ total_feed }} kg/day</p>
+
+      <p class="mt-4 font-semibold">Recommended Feed Intake:</p>
+      <ul class="list-disc list-inside ml-4 text-gray-700">
+        <li>Dry Feed: {{ dry }} kg</li>
+        <li>Green Fodder: {{ green }} kg</li>
+        <li>Concentrate: {{ concentrate }} kg</li>
+      </ul>
+
+      <p><strong>Previous Feed:</strong> {{ previous_feed }} kg</p>
+      <p><strong>Feed Gap:</strong> {{ feed_gap }} kg</p>
+      <p><strong>Ideal Cost:</strong> ₹{{ ideal_cost }}</p>
+      <p><strong>Current Cost:</strong> ₹{{ current_cost }}</p>
+
+      {% if suggestions %}
+        <div class="mt-4">
+          <p class="font-semibold">Suggestions:</p>
+          <ul class="list-disc list-inside ml-4 text-sm text-gray-700">
+            {% for suggestion in suggestions %}
+              <li>{{ suggestion }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
     </div>
 
-    <a href="/login" class="inline-block bg-green-600 text-white px-5 py-2 rounded hover:bg-green-700 transition">
+    <a href="/dashboard" class="inline-block bg-blue-600 text-white px-5 py-2 rounded hover:bg-blue-700 transition">
       ← Back to Dashboard
     </a>
   </div>

@@ -5,10 +5,10 @@
   <title>Feed Optimization | Smart Cattle</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body class="bg-green-50 min-h-screen flex items-center justify-center">
+<body class="bg-blue-50 min-h-screen flex items-center justify-center">
 
   <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-2xl">
-    <h2 class="text-3xl font-bold text-green-700 text-center mb-6">🥬 Feed Requirement & Cost Optimizer</h2>
+    <h2 class="text-3xl font-bold text-blue-700 text-center mb-6">🥬 Feed Requirement & Cost Optimizer</h2>
 
     {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -23,7 +23,7 @@
     <form action="{{ url_for('auth.feed') }}" method="POST" class="grid grid-cols-2 gap-4 mb-6">
       <div>
         <label for="cow_type" class="block text-gray-700">Cow Type</label>
-        <select name="cow_type" id="cow_type" required class="w-full mt-1 px-4 py-2 border rounded-xl">
+        <select name="cow_type" id="cow_type" required class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
           <option value="">-- Select --</option>
           <option value="milking">Milking</option>
           <option value="dry">Dry</option>
@@ -34,17 +34,17 @@
 
       <div>
         <label for="weight" class="block text-gray-700">Weight (kg)</label>
-        <input type="number" name="weight" id="weight" min="100" required class="w-full mt-1 px-4 py-2 border rounded-xl">
+        <input type="number" name="weight" id="weight" min="100" required class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
       </div>
 
       <div>
         <label for="milk_yield" class="block text-gray-700">Milk Yield (liters/day)</label>
-        <input type="number" name="milk_yield" id="milk_yield" step="0.1" min="0" required class="w-full mt-1 px-4 py-2 border rounded-xl">
+        <input type="number" name="milk_yield" id="milk_yield" step="0.1" min="0" required class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
       </div>
 
       <div>
         <label for="lactation_stage" class="block text-gray-700">Lactation Stage</label>
-        <select name="lactation_stage" id="lactation_stage" required class="w-full mt-1 px-4 py-2 border rounded-xl">
+        <select name="lactation_stage" id="lactation_stage" required class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
           <option value="">-- Select --</option>
           <option value="early">Early</option>
           <option value="mid">Mid</option>
@@ -54,51 +54,50 @@
 
       <div>
         <label for="age" class="block text-gray-700">Age (months)</label>
-        <input type="number" name="age" id="age" min="1" required class="w-full mt-1 px-4 py-2 border rounded-xl">
+        <input type="number" name="age" id="age" min="1" required class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
       </div>
 
       <div>
         <label for="current_feed_intake" class="block text-gray-700">Current Feed Intake (kg/day, optional)</label>
-        <input type="number" name="current_feed_intake" id="current_feed_intake" step="0.1" class="w-full mt-1 px-4 py-2 border rounded-xl">
+        <input type="number" name="current_feed_intake" id="current_feed_intake" step="0.1" class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
+      </div>
+
+      <div>
+        <label for="current_dry" class="block text-gray-700">Current Dry Feed Intake (kg/day)</label>
+        <input type="number" name="current_dry" id="current_dry" step="0.1" min="0" class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
+      </div>
+
+      <div>
+        <label for="current_green" class="block text-gray-700">Current Green Feed Intake (kg/day)</label>
+        <input type="number" name="current_green" id="current_green" step="0.1" min="0" class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
+      </div>
+
+      <div>
+        <label for="current_concentrate" class="block text-gray-700">Current Concentrate Intake (kg/day)</label>
+        <input type="number" name="current_concentrate" id="current_concentrate" step="0.1" min="0" class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
       </div>
 
       <div>
         <label for="cost_green" class="block text-gray-700">Cost of Green Feed (₹/kg)</label>
-        <input type="number" name="cost_green" id="cost_green" step="0.1" min="0" required class="w-full mt-1 px-4 py-2 border rounded-xl">
+        <input type="number" name="cost_green" id="cost_green" step="0.1" min="0" required class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
       </div>
 
       <div>
         <label for="cost_dry" class="block text-gray-700">Cost of Dry Feed (₹/kg)</label>
-        <input type="number" name="cost_dry" id="cost_dry" step="0.1" min="0" required class="w-full mt-1 px-4 py-2 border rounded-xl">
+        <input type="number" name="cost_dry" id="cost_dry" step="0.1" min="0" required class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
       </div>
 
       <div>
         <label for="cost_concentrate" class="block text-gray-700">Cost of Concentrate (₹/kg)</label>
-        <input type="number" name="cost_concentrate" id="cost_concentrate" step="0.1" min="0" required class="w-full mt-1 px-4 py-2 border rounded-xl">
+        <input type="number" name="cost_concentrate" id="cost_concentrate" step="0.1" min="0" required class="w-full mt-1 px-4 py-2 border border-blue-300 rounded-xl">
       </div>
 
       <div class="col-span-2">
-        <button type="submit" class="w-full bg-green-600 text-white py-3 rounded-xl hover:bg-green-700 transition">
+        <button type="submit" class="w-full bg-blue-600 text-white py-3 rounded-xl hover:bg-blue-700 transition">
           Create Feed Plan
         </button>
       </div>
     </form>
-
-    {% if result %}
-      <div class="bg-green-100 p-6 rounded-xl text-green-800 space-y-4">
-        <h3 class="text-xl font-semibold text-center mb-2">🌾 Optimized Feed Summary</h3>
-        <div class="grid grid-cols-2 gap-4 text-sm">
-          <p><strong>Total Feed Required:</strong> {{ result.total_feed }} kg/day</p>
-          <p><strong>Feed Gap:</strong> {{ result.feed_gap }} kg</p>
-          <p><strong>Green Feed:</strong> {{ result.distribution.green }} kg</p>
-          <p><strong>Dry Feed:</strong> {{ result.distribution.dry }} kg</p>
-          <p><strong>Concentrate:</strong> {{ result.distribution.concentrate }} kg</p>
-          <p><strong>Ideal Cost:</strong> ₹{{ result.ideal_cost }}</p>
-          <p><strong>Current Cost:</strong> ₹{{ result.current_cost }}</p>
-          <p class="col-span-2"><strong>💡 Suggestion:</strong> {{ result.suggestions }}</p>
-        </div>
-      </div>
-    {% endif %}
   </div>
 
 </body>

@@ -289,46 +289,6 @@ def verthe():
 
 
 
-
-
-@auth.route('/feed', methods=['GET', 'POST'])
-def feed():
-    if request.method == 'POST':
-        weight = float(request.form['weight'])
-        age = int(request.form['age'])  # not stored in model but kept for form logic
-        milk_yield = float(request.form['milk_yield'])
-
-        dry = weight * 0.025
-        green = weight * 0.05
-        concentrate = milk_yield * 0.4
-
-        total_cost = dry * 5 + green * 2 + concentrate * 25
-
-        result = FeedRecord(
-            cow_type="Local",  # or pass from form
-            weight=weight,
-            milk_yield=milk_yield,
-            feed_type="custom",  # can also pass from form
-            optimized_feed=f"Dry: {dry:.2f}, Green: {green:.2f}, Concentrate: {concentrate:.2f}",
-            total_cost=total_cost,
-            dmi_gap=0  # optional - can calculate if needed
-        )
-        db.session.add(result)
-        db.session.commit()
-
-        return render_template('feedresult.html',
-                               weight=weight,
-                               age=age,
-                               milk_yield=milk_yield,
-                               dry=dry,
-                               green=green,
-                               concentrate=concentrate,
-                               total_cost=total_cost)
-    return render_template('feedform.html')
-
-
-
-
 @auth.route('/pform')
 def predict_form():
     return render_template('predict_form.html')
@@ -369,3 +329,127 @@ def predict_market():
                            feed_type=feed_type,
                            market_ready=market_ready,
                            days_to_ready=days_predicted)
+
+
+@auth.route('/viewrecord')
+def viewrec():
+    viewreco = FeedRecord.query.all()
+    if not viewreco:
+        return jsonify({"message": "No viewreco found!"}), 404
+
+    user_list = [{"id": i.id, "weight": i.weight, "milk_yield": i.milk_yield} for i in viewreco]
+    return jsonify(user_list), 200
+
+
+
+@auth.route('/feed', methods=['GET', 'POST'])
+def feed():
+    if request.method == 'POST':
+        # Collect form inputs
+        cow_type = request.form['cow_type']
+        weight = float(request.form['weight'])
+        milk_yield = float(request.form['milk_yield'])
+        lactation_stage = request.form['lactation_stage']
+        age = int(request.form['age'])
+        
+        # Optional inputs
+        current_dry = float(request.form['current_dry']) if request.form.get('current_dry') else 0
+        current_green = float(request.form['current_green']) if request.form.get('current_green') else 0
+        current_concentrate = float(request.form['current_concentrate']) if request.form.get('current_concentrate') else 0
+        
+        cost_dry = float(request.form['cost_dry']) if request.form.get('cost_dry') else 0
+        cost_green = float(request.form['cost_green']) if request.form.get('cost_green') else 0
+        cost_concentrate = float(request.form['cost_concentrate']) if request.form.get('cost_concentrate') else 0
+
+        # Feed requirement logic
+        total_feed = round(weight * 0.025 + milk_yield * 0.4, 2)
+        dry = round(weight * 0.01, 2)
+        green = round(weight * 0.03, 2)
+        concentrate = round(milk_yield * 0.4, 2)
+
+        # Feed gap
+        current_total_feed = current_dry + current_green + current_concentrate
+        feed_gap = round(total_feed - current_total_feed, 2)
+
+        # Ideal cost
+        ideal_cost = round(dry * cost_dry + green * cost_green + concentrate * cost_concentrate, 2)
+
+        # Current cost (user-inputted current feed and prices)
+        current_cost = round(current_dry * cost_dry + current_green * cost_green + current_concentrate * cost_concentrate, 2)
+
+        #original feed:
+
+        previous_feed=round(total_feed-feed_gap)
+        # Suggestions
+        suggestions = []
+        if feed_gap > 0:
+            suggestions.append(f"Increase total feed by {feed_gap} kg/day.")
+        if current_cost > ideal_cost:
+            suggestions.append("Current feeding is more expensive than optimized. Consider adjusting feed mix.")
+        if current_cost < ideal_cost:
+            suggestions.append("Current cost is lower than ideal – check if nutrient requirements are met.")
+        if not suggestions:
+            suggestions.append("Feeding strategy looks optimal.")
+
+        # Save to database
+        optimized_feed_str = f"Dry: {dry} kg, Green: {green} kg, Concentrate: {concentrate} kg"
+        result = FeedRecord(
+            # user_id=current_user.id,
+            email=session.get("user_email"),
+            cow_type=cow_type,
+            weight=weight,
+            milk_yield=milk_yield,
+            feed_type='green',
+            optimized_feed=optimized_feed_str,
+            total_cost=current_cost,
+            dmi_gap=feed_gap
+        )
+        db.session.add(result)
+        db.session.commit()
+
+        return render_template('feedresult.html',
+                               cow_type=cow_type,
+                               weight=weight,
+                               age=age,
+                               milk_yield=milk_yield,
+                               lactation_stage=lactation_stage,
+                               total_feed=total_feed,
+                               dry=dry,
+                               green=green,
+                               concentrate=concentrate,
+                               previous_feed=previous_feed,
+                               feed_gap=feed_gap,
+                               ideal_cost=ideal_cost,
+                               current_cost=current_cost,
+                               suggestions=suggestions)
+
+    return render_template('feedform.html')
+
+
+@auth.route("/dashboard", methods=['GET'])
+def dashboard():
+    if request.args.get('json') == 'true':
+        email = session.get("user_email")
+        print("hiii     iiih", session.get("user_email"))
+
+        if not email:
+            return jsonify({"status": "error", "message": "Not logged in"}), 401
+
+        feed = FeedRecord.query.filter_by(email=email).order_by(FeedRecord.timestamp.desc()).all()
+
+        if feed:
+            feed_data = [{
+                "timestamp": record.timestamp.strftime('%Y-%m-%d %H:%M:%S'),
+                "cow_type": record.cow_type,
+                "weight": record.weight,
+                "milk_yield": record.milk_yield,
+                "cost": record.total_cost
+            } for record in feed]
+
+            print(feed_data)
+            return jsonify({"status": "success", "feedrecord": feed_data})
+        else:
+            return jsonify({"status": "success", "feedrecord": []})
+    
+    # Default: render the dashboard page
+    return render_template('dash.html')

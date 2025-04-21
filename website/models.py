@@ -50,6 +50,7 @@ class Cattle(db.Model):
 
 class FeedRecord(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), nullable=False)
     cow_type = db.Column(db.String(50))
     weight = db.Column(db.Float)
     milk_yield = db.Column(db.Float)
