@@ -5,87 +5,139 @@
     <title>My Cattle</title>
     <style>
         body {
-            font-family: 'Georgia', serif;
-            background-color: #f3f1e7;
-            padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #d7d7d0;
+            margin: 0;
+            padding: 40px 20px;
         }
+
         h1 {
             text-align: center;
-            color: #3367d6;
+            color: #2563eb;
+            margin-bottom: 30px;
+            font-size: 2rem;
         }
-        table {
-            width: 80%;
+
+        .card {
+            width: 90%;
+            max-width: 1000px;
             margin: auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            overflow-x: auto;
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
             border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
-        th, td {
-            padding: 12px 15px;
-            text-align: center;
-            border-bottom: 1px solid #ccc;
-        }
+
         th {
-            background-color: #376ea9;
+            background-color: #2563eb;
             color: #ffffff;
+            font-weight: 700;
+            font-size: 16px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-family: 'Segoe UI Semibold', 'Segoe UI', sans-serif;
         }
+
+        td {
+            font-weight: 400;
+            font-size: 15px;
+            color: #374151;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: center;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
         tr:hover {
-            background-color: #f2f2f2;
+            background-color: #f8fafc;
         }
+
         .no-data {
             text-align: center;
-            color: #a00;
+            color: #ef4444;
+            font-weight: 500;
+            margin-top: 20px;
+        }
+
+        .bottom-buttons {
+            text-align: center;
             margin-top: 30px;
         }
-        .btn
-        {
-            background-color: #376ea9;
+
+        .btn {
+            background-color: #2563eb;
             color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
             text-decoration: none;
             font-weight: 500;
-            transition: background-color 0.3s;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
         }
-        .btn:hover
-        {
-            background-color: #376ea9;
+
+        .btn:hover {
+            background-color: #1e4db7;
+        }
+
+        @media (max-width: 600px) {
+            th, td {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
         }
     </style>
 </head>
 <body>
 
     <h1>Registered Cattles</h1>
-    <table id="cattleTable" style="display:none;">
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Breed</th>
-                <th>Age</th>
-                <th>Weight</th>
-                <th>Feed Intake</th>
-                <th>Health</th>
-                
-            </tr>
-        </thead>
-        <tbody id="cattleBody">
 
-        </tbody>
-    </table>
+    <div class="card" id="cattleContainer" style="display:none;">
+        <table id="cattleTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Breed</th>
+                    <th>Age</th>
+                    <th>Weight</th>
+                    <th>Feed Intake</th>
+                    <th>Health</th>
+                </tr>
+            </thead>
+            <tbody id="cattleBody"></tbody>
+        </table>
+    </div>
 
-    <a href="/cattleupdate"><button class="btn">click to add more data</button></a>
-    <a href="/login"><button class="btn">click to go back</button></a>
     <div id="noDataMessage" class="no-data"></div>
 
+    <div class="bottom-buttons">
+        <a href="/cattleupdate" class="btn">Add More Data</a>
+        <a href="/login" class="btn">Go Back</a>
+    </div>
+
     <script>
-        // Fetch data from your Flask backend
         fetch('/get_cattle')
             .then(response => response.json())
             .then(data => {
                 if (data.status === 'success' && data.cattle.length > 0) {
-                    document.getElementById("cattleTable").style.display = "table";
-                    //document.getElementById("email").innerText=cow.email;
+                    document.getElementById("cattleContainer").style.display = "block";
                     const tbody = document.getElementById("cattleBody");
                     data.cattle.forEach(cow => {
                         const row = document.createElement('tr');
@@ -97,8 +149,6 @@
                             <td>${cow.weight}</td>
                             <td>${cow.feed_intake}</td>
                             <td>${cow.health}</td>
-                            <td><a href="/feed?id=${cow.id}"><button class="btn">Feed Detail</button></a></td>
-                            <td><a href="/pform?id=${cow.id}"><button class="btn">Market Analysis</button></a></td>
                         `;
                         tbody.appendChild(row);
                     });
