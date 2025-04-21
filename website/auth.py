@@ -117,6 +117,9 @@ def delete_user():
         return jsonify({"success": False, "message": "Server error!", "error": str(e)}), 500
     
 
+@auth.route("/cowwiki")
+def cowwiki():
+    return render_template("cowwiki.html")
 
 
 
@@ -453,3 +456,8 @@ def dashboard():
     
     # Default: render the dashboard page
     return render_template('dash.html')
+
+
+@auth.route("/about")
+def aboutpage():
+    return render_template("about.html")

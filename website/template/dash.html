@@ -22,6 +22,25 @@
           max-width: 100%;
           overflow: hidden;  /* Avoids overflow if the chart gets too large */
         }
+
+        .prof_btn {
+            background-color: #fefefe;
+            color: rgb(0, 0, 0);
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            text-decoration: none;
+            font-weight: 500;
+            margin: 0 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .prof_btn:hover {
+            background-color: #6e83d6;
+            color: #fefefe;
+        }
     </style>
 
   </head>
@@ -31,6 +50,8 @@
       class="bg-blue-600 text-white px-6 py-4 flex justify-between items-center shadow-md"
     >
       <h1 class="text-2xl font-bold">🐄 Smart Cattle Dashboard</h1>
+
+      <a href="/login"><button class="prof_btn">Profile</button></a>
     </header>
 
     <!-- Main Content -->

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mooo Facts!! (AI/ML API)</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #2563eb;
+      margin-bottom: 10px;
+      font-size: 2rem;
+    }
+
+    .btn-grey {
+      display: block;
+      margin: 10px auto 30px auto;
+      background-color: #e5e7eb;
+      color: #111827;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-grey:hover {
+      background-color: #d1d5db;
+    }
+
+    .card {
+      width: 90%;
+      max-width: 800px;
+      margin: auto;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      padding: 20px;
+    }
+
+    .fact {
+      background-color: #eff6ff;
+      border-left: 4px solid #2563eb;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+      color: #1f2937;
+      font-size: 16px;
+    }
+
+    .loading,
+    .error {
+      text-align: center;
+      font-weight: 500;
+      margin-top: 20px;
+    }
+
+    .loading {
+      color: #6b7280;
+    }
+
+    .error {
+      color: #ef4444;
+    }
+
+    .bottom-buttons {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .btn-dashboard {
+      background-color: #2563eb;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      text-decoration: none;
+      font-weight: 500;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-dashboard:hover {
+      background-color: #1e4db7;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Mooo Facts!!</h1>
+  <button class="btn-grey" onclick="fetchCowFact()">🐮 Surprise Me</button>
+
+  <div class="card" id="factsCard">
+    <div id="factsContainer">
+      <p class="loading">Loading a cow fact...</p>
+    </div>
+  </div>
+
+  <div class="bottom-buttons">
+    <a href="/login" class="btn-dashboard">Back to Dashboard</a>
+  </div>
+  <script>
+    const cowFacts = [
+      "Cows have best friends and get stressed when separated.",
+      "Cows can see almost 360° due to the placement of their eyes.",
+      "Cows sleep only about 4 hours a day.",
+      "A cow’s stomach has four compartments to help digest tough plant matter.",
+      "Cows can smell something up to 6 miles away.",
+      "The average cow produces 6.3 gallons of milk per day.",
+      "Cows chew for about 8 hours a day, producing 125 pounds of saliva.",
+      "Cows are social animals and form strong bonds within their herd.",
+      "Cows have an excellent sense of time and can learn to follow routines.",
+      "Cows can remember things for a long time — their memory is really strong.",
+      "Cows have excellent hearing and can hear frequencies up to 24 kHz.",
+"Cows communicate with each other through body language, vocalizations, and facial expressions.",
+"Cows have been domesticated for over 10,000 years.",
+"A cow's sense of smell is 300 times stronger than that of humans.",
+"Cows can recognize faces of other cows and humans.",
+"Mother cows can identify their calves by their unique calls.",
+"Cows have a wide range of vocalizations, including mooing, grunting, and bellowing.",
+"A cow’s milk can contain over 100 different nutrients.",
+"Cows are able to differentiate between different colors, except for red.",
+"Cows can walk up to 30 miles in a single day.",
+"Cows are herbivores and spend 6-8 hours each day eating grass.",
+"Cows have an average lifespan of 20 years, but many live longer with good care.",
+"A cow can produce over 200,000 glasses of milk in its lifetime.",
+"Brown cows tend to produce more milk than white cows, although the milk is not affected by their color.",
+"Some cows are capable of running at speeds of 25 miles per hour.",
+"A cow’s stomach is similar to that of a deer, capable of digesting tough plant material.",
+"Cows are naturally curious and often explore new environments.",
+"Cows' hooves are made of keratin, the same material as human fingernails.",
+"Cows use their tail to swat away flies and other pests.",
+"Cows are often observed to form strong social bonds and live in herds.",
+"Cows have a strong maternal instinct and protect their young fiercely.",
+"Cows have been found to have emotions similar to those of dogs and humans.",
+"Cows have four main types of teeth: incisors, molars, premolars, and canines.",
+"A cow’s mouth can hold up to 3.5 gallons of saliva in a day.",
+"Cows' noses are more sensitive than human noses and can detect faint smells.",
+"Cows' eyes are positioned on the sides of their head, allowing them to have a wide field of vision.",
+"Cows are very intelligent animals and can solve problems and learn from experience.",
+"Some cows can be trained to walk through a chute or milking station with minimal human interaction.",
+"Cows can often be seen chewing cud, which is a second round of chewing that helps with digestion.",
+"During mating season, male cows (bulls) will often compete for the attention of females.",
+"Cows often have a “best friend” within their herd and can become stressed when separated.",
+"Cows can live in a variety of climates, from cold mountain regions to hot desert areas.",
+"Cows are often used as symbols of fertility and abundance in many cultures.",
+"A cow’s heartbeat is around 48-84 beats per minute.",
+"Some cows can have distinctive marks, such as spots, patches, or horns, that help identify them.",
+"Highland cows, known for their long hair and horns, are a hardy breed of cattle.",
+"Cows are known to produce more milk when they feel safe and stress-free.",
+"Cows' hides can come in a variety of colors, including black, white, brown, and spots.",
+"Cows are often used to create leather products like shoes, bags, and jackets.",
+"A cow’s body temperature typically ranges from 101 to 102 degrees Fahrenheit.",
+"Different breeds of cows are used for different purposes, including dairy, meat, and draft work.",
+"Cows are often the focal point of agricultural and farming festivals around the world.",
+"Cows are extremely important to agriculture, as they are a source of food, clothing, and fertilizer.",
+"Cows have an amazing sense of direction and can often find their way back home after being moved to a new location.",
+"Before a cow gives birth, it will usually isolate itself from the herd to prepare for the process.",
+"Cows' milk is often processed into a variety of dairy products, including cheese, butter, and yogurt.",
+"Cows' milk has a natural sweetness due to the lactose sugar it contains.",
+"Some cows, like the Jersey breed, are known for producing milk that is particularly rich in butterfat.",
+"A cow’s average daily intake of food is around 50 to 75 pounds of dry matter.",
+"Cows tend to prefer a routine and feel more comfortable when fed and cared for at consistent times each day.",
+"Milk production in cows is influenced by factors like genetics, nutrition, and stress levels.",
+"Cows are ruminants, meaning they have a four-chamber stomach that allows them to digest fibrous plant material.",
+"Cows are sometimes used in therapy, as their calm and gentle nature can help people relax.",
+"Cows are known to be excellent mothers, often forming strong bonds with their calves and nurturing them until they are ready to join the herd.",
+"Cows help maintain the health of pastures by grazing, which can also promote the growth of certain plants.",
+"Studies have shown that cows can recognize human faces and voices, and may even have individual preferences for certain people."
+
+    ];
+  
+    function fetchCowFact() {
+      const factsContainer = document.getElementById("factsContainer");
+      factsContainer.innerHTML = '<p class="loading">Fetching a moo fact...</p>';
+  
+      setTimeout(() => {
+        const fact = cowFacts[Math.floor(Math.random() * cowFacts.length)];
+        factsContainer.innerHTML = "";
+  
+        const div = document.createElement("div");
+        div.className = "fact";
+        div.textContent = fact;
+        factsContainer.appendChild(div);
+      }, 300); // Simulate slight delay
+    }
+  
+    // Load one on page load
+    fetchCowFact();
+  </script>
+  
+
+</body>
+</html>
