@@ -300,12 +300,16 @@ def predict_form():
 def predict_market():
     weight = float(request.form['weight'])
     age = int(request.form['age'])
-    milk_yield = float(request.form['milk_yield'])
+    daily_feed = float(request.form['daily_feed'])
+    avg_gain = float(request.form['avg_gain'])
     feed_type = request.form['feed_type']
+    days_on_feed = int(request.form['days_on_feed'])
+
 
     feed_map = {'dry': 0, 'green': 1, 'mixed': 2}
     feed_encoded = feed_map.get(feed_type, 0)
-    X_input = [[weight, age, milk_yield, feed_encoded,0,0]]
+    X_input = [[weight, age, feed_encoded, daily_feed, avg_gain, days_on_feed]]
+
 
     # Load models
     classifier = joblib.load('models/market_classifier.pkl')
@@ -314,22 +318,24 @@ def predict_market():
     market_ready = "Yes" if classifier.predict(X_input)[0] == 1 else "No"
     days_predicted = int(regressor.predict(X_input)[0])
 
-    prediction = PredictionRecord(
-        weight=weight,
-        age=age,
-        milk_yield=milk_yield,
-        bcs=0,  # Optional: add field to form and use it
-        market_ready=market_ready,
-        predicted_days=days_predicted
-    )
-    db.session.add(prediction)
-    db.session.commit()
+    # prediction = PredictionRecord(
+    #     weight=weight,
+    #     age=age,
+    #     milk_yield=milk_yield,
+    #     bcs=0,  # Optional: add field to form and use it
+    #     market_ready=market_ready,
+    #     predicted_days=days_predicted
+    # )
+    # db.session.add(prediction)
+    # db.session.commit()
 
     return render_template('predict_result.html',
                            weight=weight,
                            age=age,
-                           milk_yield=milk_yield,
                            feed_type=feed_type,
+                           daily_feed=daily_feed,
+                           avg_gain=avg_gain,
+                           days_on_feed=days_on_feed,
                            market_ready=market_ready,
                            days_to_ready=days_predicted)
 
@@ -461,3 +467,7 @@ def dashboard():
 @auth.route("/about")
 def aboutpage():
     return render_template("about.html")
+
+@auth.route("/contact")
+def contact():
+    return render_template("contact.html")

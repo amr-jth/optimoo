@@ -13,19 +13,28 @@
     <div class="text-left space-y-3 mb-6">
       <p><strong>Weight:</strong> {{ weight }} kg</p>
       <p><strong>Age:</strong> {{ age }} months</p>
-      <p><strong>Milk Yield:</strong> {{ milk_yield }} L/day</p>
       <p><strong>Feed Type:</strong> {{ feed_type }}</p>
+      <p><strong>Daily Feed Amount:</strong> {{ daily_feed }} kg/day</p>
+      <p><strong>Average Gain per Day:</strong> {{ avg_gain }} kg/day</p>
+      <p><strong>Days on Feed:</strong> {{ days_on_feed }} days</p>
     </div>
 
-    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded mb-6">
-      <p class="text-lg font-semibold">
-        🐄 <span class="text-gray-700">Market Ready:</span>
-        <span class="text-yellow-800">{{ market_ready }}</span>
-      </p>
-      <p class="text-md text-gray-700 mt-1">
-        ⏳ Estimated Days to Market Readiness: <strong>{{ days_to_ready }}</strong> days
+    {% if market_ready == 'Yes' %}
+    <div class="bg-green-100 border-l-4 border-green-500 p-4 rounded mb-6">
+      <p class="text-lg font-semibold text-green-700">
+        ✅ The cattle is <strong>Market Ready</strong>!
       </p>
     </div>
+    {% else %}
+    <div class="bg-yellow-100 border-l-4 border-yellow-500 p-4 rounded mb-6">
+      <p class="text-lg font-semibold text-yellow-800">
+        ⏳ The cattle is <strong>NOT Market Ready</strong>.
+      </p>
+      <p class="text-md text-gray-700 mt-1">
+        Estimated Days to Market Readiness: <strong>{{ days_to_ready }}</strong> days
+      </p>
+    </div>
+    {% endif %}
 
     <a href="/dashboard"
        class="inline-block bg-yellow-500 text-white px-5 py-2 rounded-lg hover:bg-yellow-600 transition">
